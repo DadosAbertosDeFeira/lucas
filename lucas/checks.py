@@ -5,7 +5,7 @@ def is_reachable(url):
     response = requests.get(url)
     try:
         response.raise_for_status()
-    except:
+    except requests.RequestException:
         return False
     return True
 

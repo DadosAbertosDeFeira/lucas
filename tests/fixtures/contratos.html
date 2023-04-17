@@ -1,0 +1,416 @@
+
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->
+    <!-- BEGIN HEAD -->
+    <head>
+        <meta charset="utf-8" />
+        <title>Portal da Transparência Cidadã</title>
+        <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <meta content="" name="description" />
+        <meta content="" name="author" />
+        <link href="assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" />
+        <link href="assets/bootstrap/css/bootstrap-fileupload.css" rel="stylesheet" />
+        <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
+        <link href="css/style.css" rel="stylesheet" />
+        <link href="css/style-responsive.css" rel="stylesheet" />
+        <link href="css/style-green.css" rel="stylesheet" id="style_color" />
+        <script src="controllerjs/controller.js"></script>
+        <link rel="stylesheet" type="text/css" href="assets/bootstrap-datepicker/css/datepicker.css" />
+         <link rel="stylesheet" type="text/css" href="assets/bootstrap-daterangepicker/daterangepicker.css" />
+        <script src="js/jquery-1.8.3.min.js"></script>
+        <script type="text/javascript" src="js/responsivemobilemenu.js"></script>
+        <link href="css/responsivemobilemenu.css" rel="stylesheet">
+	<!--<script src="https://www.google.com/recaptcha/api.js" async defer></script>-->
+
+
+    </head>
+    <!-- END HEAD -->
+    <!-- BEGIN BODY -->
+    <body class="fixed-top" onload="controlaGlossario('A')">
+<div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+      <div class="vw-plugin-top-wrapper"></div>
+    </div>
+  </div>
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+  <script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+  </script>
+        <script language="JavaScript" type="text/javascript">
+   function setCookie(nome,valor,dias,caminho,dominio,seguro) {
+var expires, date;
+if (typeof dias == "number") {
+    date = new Date();
+    date.setTime( date.getTime() + (dias*24*60*60*1000) );
+        expires = date.toGMTString();
+}
+document.cookie = nome + "=" + escape(valor) +
+    ((expires) ? "; expires=" + expires : "") +
+    ((caminho) ? "; caminho=" + caminho : "") +
+    ((dominio) ? "; dominio=" + dominio : "") +
+    ((seguro) ? "; seguro" : "");
+}
+function pegarCookie(nome) {
+var nomeq = nome + "=";
+var c_ar = document.cookie.split(';');
+for (var i=0; i<c_ar.length; i++) {
+    var c = c_ar[i];
+    while (c.charAt(0)==' ') c = c.substring(1,c.length);
+    if (c.indexOf(nomeq) == 0) return unescape( c.substring(nomeq.length, c.length) );
+}
+return null;
+}
+function deletarCookie(nome,caminho,dominio) {
+if (pegarCookie(nome)) {
+    document.cookie = nome + "=" +
+    ((caminho) ? "; caminho=" + caminho : "") +
+    ((dominio) ? "; dominio=" + dominio : "") +
+    "; expires=Thu, 01-Jan-70 00:00:01 GMT";
+}
+}
+var modificaTamanhoFonte = {
+    Unidade:    "px",
+    TamanhoOriginal: 11,
+    TamanhoMaximo:     20,
+    TamanhoMinimo:     10,
+    Lista: [],
+    setDefaults: function(unit, dflt, mn, mx, sels) {
+        this.Unidade = unit;       this.TamanhoOriginal = dflt;
+        this.TamanhoMaximo = mx;          this.TamanhoMinimo = mn;
+        if (sels) this.set(dflt, mn, mx, sels);
+    },
+    set: function (dflt, mn, mx, sels) {
+        var ln = this.Lista.length;
+        for (var i=0; sels[i]; i++) {
+            this.Lista[ln+i] = [];
+            this.Lista[ln+i]["sel"]  = sels[i];
+            this.Lista[ln+i]["dflt"] = dflt;
+            this.Lista[ln+i]["min"]   = mn || this.TamanhoMinimo;
+            this.Lista[ln+i]["max"]   = mx || this.TamanhoMaximo;
+
+            this.Lista[ln+i]["ratio"] = this.Lista[ln+i]["dflt"] / this.TamanhoOriginal;
+        }
+    },
+    init: function() {
+        if ( !document.getElementById || !document.getElementsByTagName ) return;
+        var tamanho, Modificador, i;
+        tamanho = window.location.search? window.location.search.slice(1): pegarCookie("fontSize");
+        tamanho = !isNaN( parseFloat(tamanho) )? parseFloat(tamanho): this.TamanhoOriginal;
+        if ( tamanho > this.TamanhoMaximo || tamanho < this.TamanhoMinimo ) tamanho = this.TamanhoOriginal;
+        this.curSize = this.TamanhoOriginal;
+        Modificador = document.getElementById('sizer');
+        if (Modificador) Modificador.style.display = "block";
+        if (this.Lista.length == 0) {
+            this.setDefaults( this.Unidade, this.TamanhoOriginal, this.TamanhoMinimo, this.TamanhoMaximo, ['body', 'td'] );
+        }
+        if ( tamanho != this.TamanhoOriginal ) this.adjust( tamanho - this.TamanhoOriginal );
+    },
+    adjust: function(n) {
+        if ( !this.curSize ) return;
+        var alist, tamanho, list, i, j;
+        if ( n > 0 ) {
+            if ( this.curSize + n > this.TamanhoMaximo ) n = this.TamanhoMaximo - this.curSize;
+        } else if ( n < 0 ) {
+            if ( this.curSize + n < this.TamanhoMinimo ) n = this.TamanhoMinimo - this.curSize;
+        }
+        if ( n == 0 ) return;
+        this.curSize += n;
+        alist = this.Lista;
+        for (i=0; alist[i]; i++) {
+            tamanho = this.curSize * alist[i]['ratio'];
+            tamanho = Math.max(alist[i]['min'], tamanho); tamanho = Math.min(alist[i]['max'], tamanho);
+            list = getElementsBySelector( alist[i]['sel'] );
+            for (j=0; list[j]; j++) { list[j].style.fontSize = tamanho + this.Unidade; }
+        }
+        setCookie( "fontSize", this.curSize, 180, "/" );
+    },
+    reset: function() {
+        var alist = this.Lista, list, i, j;
+        for (i=0; alist[i]; i++) {
+            list = getElementsBySelector( alist[i]['sel'] );
+            for (j=0; list[j]; j++) {
+                list[j].style.fontSize = '';
+            }
+        }
+        this.curSize = this.TamanhoOriginal;
+        deletarCookie("fontSize", "/");
+    }
+}
+function getElementsBySelector(selector) {
+    if (!document.getElementsByTagName) return [];
+    var nodeList = [document], tokens, bits, list, col, els, i, j, k;
+    selector = selector.normalize();
+    tokens = selector.split(' ');
+    for (i=0; tokens[i]; i++) {
+        if ( tokens[i].indexOf('#') != -1 ) {
+            bits = tokens[i].split('#');
+            var el = document.getElementById( bits[1] );
+            if (!el) return [];
+            if ( bits[0] ) {
+                if ( el.tagName.toLowerCase() != bits[0].toLowerCase() ) return [];
+            }
+            for (j=0; nodeList[j]; j++) {
+                if ( nodeList[j] == document || contained(el, nodeList[j]) )
+                    nodeList = [el];
+                else return [];
+            }
+            continue;
+        } else if ( tokens[i].indexOf('.') != -1 ) {
+            bits = tokens[i].split('.'); col = [];
+            for (j=0; nodeList[j]; j++) {
+                els = getElementsByClassName( bits[1], bits[0], nodeList[j] );
+                for (k=0; els[k]; k++) { col[col.length] = els[k]; }
+            }
+            nodeList = [];
+            for (j=0; col[j]; j++) { nodeList.push(col[j]); }
+            continue;
+        } else {
+            els = [];
+            for (j = 0; nodeList[j]; j++) {
+                list = nodeList[j].getElementsByTagName(tokens[i]);
+                for (k = 0; list[k]; k++) { els.push(list[k]); }
+            }
+            nodeList = els;
+        }
+    }
+    return nodeList;
+}
+function getElementsByClassName(sClasse, sTag, oConta) {
+    var result = [], list, i;
+    var re = new RegExp("\\b" + sClasse + "\\b", "i");
+    oConta = oConta? oConta: document;
+    if ( document.getElementsByTagName ) {
+        if ( !sTag || sTag == "*" ) {
+            list = oConta.all? oConta.all: oConta.getElementsByTagName("*");
+        } else {
+            list = oConta.getElementsByTagName(sTag);
+        }
+        for (i=0; list[i]; i++)
+            if ( re.test( list[i].className ) ) result.push( list[i] );
+    }
+    return result;
+}
+function contained(oNo, oConta) {
+    if (!oNo) return;
+    while ( oNo = oNo.parentNode ) if ( oNo == oConta ) return true;
+    return false;
+}
+if (!Array.prototype.push) {
+    Array.prototype.push =  function() {
+        for (var i=0; arguments[i]; i++) this[this.length] = arguments[i];
+        return this[this.length-1];
+    }
+}
+String.prototype.normalize = function() {
+    var re = /\s\s+/g;
+    return this.trim().replace(re, " ");
+}
+String.prototype.trim = function() {
+    var re = /^\s+|\s+$/;
+    return this.replace(re, "");
+}
+modificaTamanhoFonte.setDefaults( 'px', 11, 10, 20, ['body', 'td', 'div', 'p'] );
+modificaTamanhoFonte.set(11, 11, 11, ['div#menu'] );
+modificaTamanhoFonte.init();</script>
+
+
+
+<!-- BEGIN HEADER -->
+<div id="header" class="navbar navbar-inverse navbar-fixed-top">
+    <!-- BEGIN TOP NAVIGATION BAR -->
+    <div class="navbar-inner">
+        <div class="container-fluid">
+
+            <!--BEGIN SIDEBAR TOGGLE-->
+            <div class="sidebar-toggle-box hidden-phone">
+                <img src="img/logo2013.png" alt="Portal da Transparência Cidadã" />
+            </div>
+            <!--END SIDEBAR TOGGLE-->
+            <!--BEGIN SIDEBAR TOGGLE--><!--END SIDEBAR TOGGLE-->
+            <!-- BEGIN LOGO -->
+            <a class="brand" href="index.php?view=inicio">
+                <img src="img/logo.png" alt="Portal da Transparência Cidadã" />
+            </a>
+            <!-- END LOGO -->
+            <!--                     BEGIN RESPONSIVE MENU TOGGLER
+                                <a class="btn btn-navbar collapsed" id="main_menu_trigger" data-toggle="collapse" data-target=".nav-collapse">
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="arrow"></span>
+                                </a>-->
+            <!-- END RESPONSIVE MENU TOGGLER --><!-- END  NOTIFICATION -->
+
+
+
+            <div class="span8 rmm" data-menu-style='minimal'>
+                <ul >
+                    <li><a href='index.php?view=inicio' class="menufonte active" tabindex="0">IN&Iacute;CIO</a></li>
+                    <li><a href='index.php?view=o-portal' class="menufonte " tabindex="0">O PORTAL</a></li>
+                    <li><a href='index.php?view=estatisticas-de-contato' class="menufonte " tabindex="0">ESTATÍSTICAS</a></li>
+                    <!--                        <li><a href='#' class="menufonte">MANUAL</a></li>-->
+                    <li><a href='index.php?view=contato' class="menufonte " tabindex="0">CONTATO</a></li>
+                    <li><a href='index.php?view=mapadosite' class="menufonte " tabindex="0">MAPA DO SITE</a></li>
+                    <li><a href='index.php?view=iniciocovid' class="menufonte " tabindex="0">COVID-19</a></li>
+
+
+                </ul>
+            </div>
+
+
+            <!--                         BEGIN NOTIFICATION
+                                    <ul class="nav top-menu">
+                                         BEGIN SETTINGS
+                                        <li class="dropdown">
+                                            <a href="index.php?view=inicio" class="dropdown-toggle" >
+                                                <i class="icon-home">
+                                                    <span class="menufonte"> In&iacute;cio</span></i>
+                                            </a>
+                                        </li>
+                                         END SETTINGS
+                                         BEGIN INBOX DROPDOWN
+                                        <li class="dropdown" id="header_inbox_bar">
+                                            <a href="index.php?view=o-portal" class="dropdown-toggle">
+                                                <i class="icon-desktop">
+                                                    <span class="menufonte"> O Portal</span></i></a>
+
+                                        </li>
+                                         END INBOX DROPDOWN
+
+
+                                         BEGIN NOTIFICATION DROPDOWN
+                                        <li class="dropdown" id="header_notification_bar">
+                                            <a href="index.php?view=contato" class="dropdown-toggle">
+                                                <i class="icon-phone">
+                                                    <span class="menufonte"> Contato</span></i></a>
+                                        </li>
+                                         END NOTIFICATION DROPDOWN
+
+                                    </ul>-->
+
+            <!--                    <div class="top-nav ">
+                                    <ul class="nav pull-right top-menu" >
+
+                                    </ul>
+                                     END TOP NAVIGATION MENU
+                                </div>-->
+
+        </div>
+
+    </div>
+
+    <!-- END TOP NAVIGATION BAR -->
+	<div style="float:right">
+		<a href="#" class="menufonte" style="margin-right:0.5em;color:black;font-weight:bold" onclick="modificaTamanhoFonte.adjust(-2); return false;">A-</a>
+		<a href="#" class="menufonte" style="margin-right:0.5em;color:black;font-weight:bold" onclick="modificaTamanhoFonte.reset(); return false;">A</a>
+		<a href="#" class="menufonte" style="margin-right:0.5em;color:black;font-weight:bold" onclick="modificaTamanhoFonte.adjust(2); return false;">A+</a>
+	</div>
+</div>
+
+        <!-- END HEADER -->
+        <!-- BEGIN CONTAINER -->
+        <div id="container" class="row-fluid">
+
+            <!-- BEGIN PAGE -->
+            <div id="main-content">
+                <!-- BEGIN PAGE CONTAINER-->
+                <div class="container-fluid">
+                    <!-- BEGIN PAGE HEADER-->
+                    <div class="row-fluid">
+                        <div class="span12">
+                        </div>
+                    </div>
+                    <!-- END PAGE HEADER-->
+                    <!-- BEGIN PAGE CONTENT-->
+                    <div class="row-fluid">
+                        <div class="span12">
+
+                            <br/>
+<br/>
+<iframe src="https://www.seadmdmi.feiradesantana.ba.gov.br/softsam3-pmfs/portal/#/transparencia/contrato/14043574000151"
+		width="100%" height="768px" style="border:none;"></iframe>
+
+                        </div>
+                        <!-- END BLOG PORTLET-->
+                    </div>
+                </div>
+                <!-- END PAGE CONTENT-->
+            </div>
+            <!-- END PAGE CONTAINER-->
+        </div>
+        <!-- END PAGE -->
+
+    </div>
+    <!-- END CONTAINER -->
+    <footer class="footer" role="contentinfo">
+    <div class="container-fluid">
+        <div class="span12">
+            <img src="img/logoodape.png"/>
+            <a href="?view=contato" target="_blank"><img src="img/logoros.png"/></a>
+            <a href="http://www.n2solucoes.com.br" target="_blank"><img src="img/logoN2.png" /></a>
+            <a href="?view=estatisticas-de-contato"><img src="/estatistica-contato-icone.png" style="max-width: 120px;" /></a>
+
+        </div>
+    </div>
+    <div class="container-fluid">
+        <span> Secretaria Municipal da Fazenda - 2013 &copy; Todos os direitos reservados. </span>
+    </div>
+</footer>
+    <!-- BEGIN JAVASCRIPTS -->
+
+   <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+   <script type="text/javascript" src="assets/bootstrap-toggle-buttons/static/js/jquery.toggle.buttons.js"></script>
+   <script type="text/javascript" src="assets/chosen-bootstrap/chosen/chosen.jquery.min.js"></script>
+   <script type="text/javascript" src="assets/uniform/jquery.uniform.min.js"></script>
+   <script type="text/javascript" src="assets/bootstrap-wysihtml5/wysihtml5-0.3.0.js"></script>
+   <script type="text/javascript" src="assets/bootstrap-wysihtml5/bootstrap-wysihtml5.js"></script>
+   <script type="text/javascript" src="assets/clockface/js/clockface.js"></script>
+   <script type="text/javascript" src="assets/jquery-tags-input/jquery.tagsinput.min.js"></script>
+   <script type="text/javascript" src="assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+   <script type="text/javascript" src="assets/bootstrap-daterangepicker/date.js"></script>
+   <script type="text/javascript" src="assets/bootstrap-daterangepicker/daterangepicker.js"></script>
+   <script type="text/javascript" src="assets/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
+   <script type="text/javascript" src="assets/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
+   <script type="text/javascript" src="assets/bootstrap-inputmask/bootstrap-inputmask.min.js"></script>
+   <script type="text/javascript" src="assets/ckeditor/ckeditor.js"></script>
+   <script type="text/javascript" src="js/jquery.validate.min.js"></script>
+   <script type="text/javascript" src="js/additional-methods.min.js"></script>
+   <script type="text/javascript" src="assets/uniform/jquery.uniform.min.js"></script>
+
+    <!--[if lt IE 9]>
+    <script src="js/excanvas.js"></script>
+    <script src="js/respond.js"></script>
+    <![endif]-->
+
+    <!--common script for all pages-->
+    <script src="js/common-scripts.js"></script>
+
+   <!--script for this page-->
+   <script src="js/form-component.js"></script>
+   <script src="js/form-validation-script.js"></script>
+  <!-- END JAVASCRIPTS -->
+  <script>
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function() {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-60336837-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+</body>
+<!-- END BODY -->
+</html>

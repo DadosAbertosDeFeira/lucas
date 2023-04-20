@@ -36,17 +36,3 @@ def is_reachable(url):
         if has_robot_blocker(response.text):
             result["robot_friendly"] = False
     return result
-
-
-url = "http://www.transparencia.feiradesantana.ba.gov.br/index.php?view=contratos"
-
-
-def request_html_from(url):
-    from requests_html import HTMLSession
-
-    session = HTMLSession()
-    response = session.get(url)
-    # response.html.render() # TimeoutError: Navigation Timeout Exceeded: 8000 ms exceeded.
-    # response.html.render(wait=10, sleep=15) # TimeoutError: Navigation Timeout Exceeded: 8000 ms exceeded.
-    # response.html.render(30) # TimeoutError: Navigation Timeout Exceeded: 8000 ms exceeded.
-    response.html.render(timeout=30)

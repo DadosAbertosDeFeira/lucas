@@ -6,9 +6,6 @@ authors = ["Ana Paula Gomes <apgomes88@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 
-[tool.poetry.scripts]
-lucas = "lucas.cli:main"
-
 [tool.poetry.dependencies]
 python = "^3.8"
 requests = "^2.28.2"

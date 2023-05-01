@@ -8,3 +8,9 @@ Monitora portais da transparência de acordo com a LAI e LRF
 
 Lucas da Feira foi um herói do povo negro.
 Saiba mais [aqui](https://www.feiradesantana.ba.gov.br/secom/noticias.asp?idn=14154) e [aqui](https://www.feiradesantana.ba.gov.br/servicos.asp?s=a&link=secom/webtv.asp&idv=27031).
+
+## Desenvolvimento
+
+Dependências:
+
+* [playwright](https://playwright.dev/python/docs/intro)
